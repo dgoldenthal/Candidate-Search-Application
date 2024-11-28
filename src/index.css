@@ -94,6 +94,51 @@ h1 {
   margin-bottom: 2rem;
 }
 
+/* Search and Filter Styles */
+.search-form, .controls-container {
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.search-input, .filter-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  transition: border-color 0.3s;
+}
+
+.search-input::placeholder, .filter-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.search-input:focus, .filter-input:focus {
+  outline: none;
+  border-color: #646cff;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.search-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #646cff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.search-button:hover {
+  background: #535bf2;
+}
+
 /* Candidate Card Styles */
 .candidate-card {
   background: rgba(0, 0, 0, 0.8);
@@ -163,16 +208,6 @@ button:hover {
   table-layout: fixed;
 }
 
-tr {
-  border-radius: 10px;
-  background-color: #000;
-  color: white;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #333333;
-}
-
 .candidates-table {
   width: 100%;
   border-collapse: separate;
@@ -194,6 +229,10 @@ tbody tr:nth-child(odd) {
   background: var(--table-bg);
 }
 
+.candidates-table tbody tr:nth-child(odd) td {
+  background: var(--table-alt-bg);
+}
+
 .candidates-table th:first-child,
 .candidates-table td:first-child {
   border-radius: 8px 0 0 8px;
@@ -202,6 +241,17 @@ tbody tr:nth-child(odd) {
 .candidates-table th:last-child,
 .candidates-table td:last-child {
   border-radius: 0 8px 8px 0;
+}
+
+.sortable {
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  padding-right: 1.5rem;
+}
+
+.sortable:hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .table-avatar {
@@ -222,9 +272,24 @@ a:hover {
   color: #535bf2;
 }
 
-/* Loading and Error States */
+.profile-link {
+  display: inline-block;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background: rgba(100, 108, 255, 0.2);
+  border-radius: 4px;
+  color: #646cff;
+  transition: background-color 0.3s;
+}
+
+.profile-link:hover {
+  background: rgba(100, 108, 255, 0.3);
+}
+
+/* Status Messages */
 .loading,
-.error {
+.error,
+.no-candidates {
   text-align: center;
   padding: 2rem;
   background: rgba(0, 0, 0, 0.5);
@@ -260,6 +325,14 @@ a:hover {
 
   .nav {
     padding: 1em;
+  }
+
+  .search-form, .controls-container {
+    flex-direction: column;
+  }
+
+  .search-button {
+    width: 100%;
   }
 }
 

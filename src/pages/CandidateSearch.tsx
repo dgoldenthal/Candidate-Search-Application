@@ -4,25 +4,30 @@ import { Candidate } from '../interfaces/candidate.interface';
 
 const CandidateSearch = () => {
   const [currentCandidate, setCurrentCandidate] = useState<Candidate | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchNextCandidate = async () => {
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
     setLoading(true);
+    setError(null);
+    
     try {
-      const users = await searchGithub();
-      if (users.length > 0) {
-        const userData = await searchGithubUser(users[0].login);
+      const userData = await searchGithubUser(searchQuery);
+      if (userData.login) {
         setCurrentCandidate(userData);
+      } else {
+        setError('No user found with that username');
       }
     } catch (err) {
-      console.error('Error fetching candidate:', err);
+      setError('Error fetching user data');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
-
-  useEffect(() => {
-    fetchNextCandidate();
-  }, []);
 
   const handleAccept = () => {
     if (currentCandidate) {
@@ -31,17 +36,38 @@ const CandidateSearch = () => {
         'savedCandidates',
         JSON.stringify([...savedCandidates, currentCandidate])
       );
-      fetchNextCandidate();
+      setCurrentCandidate(null);
+      setSearchQuery('');
     }
   };
 
-  if (loading) {
-    return <h1>Loading...</h1>;
-  }
+  const handleReject = () => {
+    setCurrentCandidate(null);
+    setSearchQuery('');
+  };
 
   return (
     <div className="container">
       <h1>Candidate Search</h1>
+      
+      <form onSubmit={handleSearch} className="search-form">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Enter GitHub username"
+          className="search-input"
+          required
+        />
+        <button type="submit" className="search-button">
+          Search
+        </button>
+      </form>
+
+      {loading && <div className="loading">Searching...</div>}
+      
+      {error && <div className="error">{error}</div>}
+
       {currentCandidate && (
         <div className="candidate-card">
           <img 
@@ -51,11 +77,19 @@ const CandidateSearch = () => {
           />
           <h2>{currentCandidate.login}({currentCandidate.login})</h2>
           <p>Location: {currentCandidate.location || 'Not specified'}</p>
-          <p>Email: <a href={`mailto:${currentCandidate.email}`}>{currentCandidate.email || 'Not specified'}</a></p>
+          <p>Email: {currentCandidate.email || 'Not specified'}</p>
           <p>Company: {currentCandidate.company || 'Not specified'}</p>
           <p>Bio: {currentCandidate.bio || 'Not specified'}</p>
+          <a 
+            href={currentCandidate.html_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="profile-link"
+          >
+            View GitHub Profile
+          </a>
           <div className="button-container">
-            <button onClick={fetchNextCandidate} className="reject-button">−</button>
+            <button onClick={handleReject} className="reject-button">−</button>
             <button onClick={handleAccept} className="accept-button">+</button>
           </div>
         </div>

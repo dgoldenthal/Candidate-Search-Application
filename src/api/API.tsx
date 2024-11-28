@@ -1,42 +1,45 @@
+import { Octokit } from '@octokit/core';
+
+const octokit = new Octokit({
+  auth: import.meta.env.VITE_GITHUB_TOKEN
+});
+
 const searchGithub = async () => {
   try {
     const start = Math.floor(Math.random() * 100000000) + 1;
-    // console.log(import.meta.env);
-    const response = await fetch(
-      `https://api.github.com/users?since=${start}`,
-      {
-        headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
-        },
+    const response = await octokit.request('GET /users', {
+      since: start,
+      per_page: 1,
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
       }
-    );
-    // console.log('Response:', response);
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error('invalid API response, check the network tab');
+    });
+
+    if (response.status === 200) {
+      return response.data;
     }
-    // console.log('Data:', data);
-    return data;
+    throw new Error('Invalid API response');
   } catch (err) {
-    // console.log('an error occurred', err);
+    console.error('An error occurred:', err);
     return [];
   }
 };
 
 const searchGithubUser = async (username: string) => {
   try {
-    const response = await fetch(`https://api.github.com/users/${username}`, {
+    const response = await octokit.request('GET /users/{username}', {
+      username,
       headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
-      },
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
     });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error('invalid API response, check the network tab');
+
+    if (response.status === 200) {
+      return response.data;
     }
-    return data;
+    throw new Error('Invalid API response');
   } catch (err) {
-    // console.log('an error occurred', err);
+    console.error('An error occurred:', err);
     return {};
   }
 };
