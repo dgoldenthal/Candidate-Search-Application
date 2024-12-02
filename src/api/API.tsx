@@ -4,29 +4,9 @@ const octokit = new Octokit({
   auth: import.meta.env.VITE_GITHUB_TOKEN
 });
 
-const searchGithub = async () => {
-  try {
-    const start = Math.floor(Math.random() * 100000000) + 1;
-    const response = await octokit.request('GET /users', {
-      since: start,
-      per_page: 1,
-      headers: {
-        'X-GitHub-Api-Version': '2022-11-28'
-      }
-    });
-
-    if (response.status === 200) {
-      return response.data;
-    }
-    throw new Error('Invalid API response');
-  } catch (err) {
-    console.error('An error occurred:', err);
-    return [];
-  }
-};
-
 const searchGithubUser = async (username: string) => {
   try {
+    console.log('Searching for user:', username); // Debug log
     const response = await octokit.request('GET /users/{username}', {
       username,
       headers: {
@@ -34,14 +14,17 @@ const searchGithubUser = async (username: string) => {
       }
     });
 
-    if (response.status === 200) {
+    if (response.status === 200 && response.data) {
       return response.data;
     }
-    throw new Error('Invalid API response');
-  } catch (err) {
-    console.error('An error occurred:', err);
-    return {};
+    throw new Error('No user data returned');
+  } catch (err: any) {
+    console.error('GitHub API Error:', err.message); // Debug log
+    if (err.status === 404) {
+      throw new Error('No user found with that username');
+    }
+    throw new Error('Error fetching user data');
   }
 };
 
-export { searchGithub, searchGithubUser };
+export { searchGithubUser };

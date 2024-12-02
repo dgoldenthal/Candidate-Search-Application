@@ -14,30 +14,16 @@ const CandidateSearch = () => {
 
     setLoading(true);
     setError(null);
+    setCurrentCandidate(null);
     
     try {
       const userData = await searchGithubUser(searchQuery);
-      if ('login' in userData) {
-        setCurrentCandidate(userData as Candidate);
-      } else {
-        setError('No user found with that username');
-      }
-    } catch (err) {
-      setError('Error fetching user data');
+      setCurrentCandidate(userData as Candidate);
+    } catch (err: any) {
+      console.error('Search error:', err); // Debug log
+      setError(err.message || 'Error fetching user data');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleAccept = () => {
-    if (currentCandidate) {
-      const savedCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
-      localStorage.setItem(
-        'savedCandidates',
-        JSON.stringify([...savedCandidates, currentCandidate])
-      );
-      setCurrentCandidate(null);
-      setSearchQuery('');
     }
   };
 
@@ -54,8 +40,8 @@ const CandidateSearch = () => {
           className="search-input"
           required
         />
-        <button type="submit" className="search-button">
-          Search
+        <button type="submit" className="search-button" disabled={loading}>
+          {loading ? 'Searching...' : 'Search'}
         </button>
       </form>
 
@@ -84,10 +70,6 @@ const CandidateSearch = () => {
           >
             View GitHub Profile
           </a>
-          <div className="button-container">
-            <button onClick={() => setCurrentCandidate(null)} className="reject-button">−</button>
-            <button onClick={handleAccept} className="accept-button">+</button>
-          </div>
         </div>
       )}
     </div>
