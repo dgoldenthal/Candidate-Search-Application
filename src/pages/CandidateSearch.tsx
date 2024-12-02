@@ -14,17 +14,32 @@ const CandidateSearch = () => {
 
     setLoading(true);
     setError(null);
-    setCurrentCandidate(null);
     
     try {
       const userData = await searchGithubUser(searchQuery);
       setCurrentCandidate(userData as Candidate);
     } catch (err: any) {
-      console.error('Search error:', err); // Debug log
       setError(err.message || 'Error fetching user data');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleAccept = () => {
+    if (currentCandidate) {
+      const savedCandidates = JSON.parse(localStorage.getItem('savedCandidates') || '[]');
+      localStorage.setItem(
+        'savedCandidates',
+        JSON.stringify([...savedCandidates, currentCandidate])
+      );
+      setCurrentCandidate(null);
+      setSearchQuery('');
+    }
+  };
+
+  const handleReject = () => {
+    setCurrentCandidate(null);
+    setSearchQuery('');
   };
 
   return (
@@ -40,8 +55,8 @@ const CandidateSearch = () => {
           className="search-input"
           required
         />
-        <button type="submit" className="search-button" disabled={loading}>
-          {loading ? 'Searching...' : 'Search'}
+        <button type="submit" className="search-button">
+          Search
         </button>
       </form>
 
@@ -56,10 +71,13 @@ const CandidateSearch = () => {
             alt={`${currentCandidate.login}'s avatar`}
             className="candidate-image"
           />
-          <h2>{currentCandidate.name || currentCandidate.login}</h2>
-          <p className="username">({currentCandidate.login})</p>
+          <h2>{currentCandidate.name || currentCandidate.login}({currentCandidate.login})</h2>
           <p>Location: {currentCandidate.location || 'Not specified'}</p>
-          <p>Email: {currentCandidate.email || 'Not specified'}</p>
+          <p>Email: 
+            <a href={`mailto:${currentCandidate.email}`}>
+              {currentCandidate.email || 'Not specified'}
+            </a>
+          </p>
           <p>Company: {currentCandidate.company || 'Not specified'}</p>
           <p>Bio: {currentCandidate.bio || 'Not specified'}</p>
           <a 
@@ -70,6 +88,10 @@ const CandidateSearch = () => {
           >
             View GitHub Profile
           </a>
+          <div className="button-container">
+            <button onClick={handleReject} className="reject-button">−</button>
+            <button onClick={handleAccept} className="accept-button">+</button>
+          </div>
         </div>
       )}
     </div>

@@ -85,6 +85,7 @@ main {
   max-width: 1200px;
   padding: 2rem;
   margin: 0 auto;
+  text-align: center;
 }
 
 h1 {
@@ -203,11 +204,6 @@ button:hover {
 }
 
 /* Table Styles */
-.table {
-  width: 80vw;
-  table-layout: fixed;
-}
-
 .candidates-table {
   width: 100%;
   border-collapse: separate;
@@ -218,14 +214,6 @@ button:hover {
 .candidates-table td {
   padding: 1rem;
   text-align: left;
-}
-
-.candidates-table th {
-  background: var(--table-bg);
-  font-weight: 600;
-}
-
-.candidates-table td {
   background: var(--table-bg);
 }
 
@@ -233,32 +221,21 @@ button:hover {
   background: var(--table-alt-bg);
 }
 
-.candidates-table th:first-child,
-.candidates-table td:first-child {
-  border-radius: 8px 0 0 8px;
-}
-
-.candidates-table th:last-child,
-.candidates-table td:last-child {
-  border-radius: 0 8px 8px 0;
+.table-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  vertical-align: middle;
 }
 
 .sortable {
   cursor: pointer;
   user-select: none;
   position: relative;
-  padding-right: 1.5rem;
 }
 
 .sortable:hover {
   background: rgba(255, 255, 255, 0.1);
-}
-
-.table-avatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 5px;
-  vertical-align: middle;
 }
 
 /* Link Styles */
@@ -278,7 +255,6 @@ a:hover {
   padding: 0.5rem 1rem;
   background: rgba(100, 108, 255, 0.2);
   border-radius: 4px;
-  color: #646cff;
   transition: background-color 0.3s;
 }
 
@@ -286,10 +262,9 @@ a:hover {
   background: rgba(100, 108, 255, 0.3);
 }
 
-/* Status Messages */
+/* Loading and Error States */
 .loading,
-.error,
-.no-candidates {
+.error {
   text-align: center;
   padding: 2rem;
   background: rgba(0, 0, 0, 0.5);
@@ -327,12 +302,17 @@ a:hover {
     padding: 1em;
   }
 
-  .search-form, .controls-container {
+  .search-form {
     flex-direction: column;
   }
 
   .search-button {
     width: 100%;
+  }
+
+  .candidate-card {
+    margin: 1rem;
+    padding: 1rem;
   }
 }
 
@@ -345,10 +325,6 @@ a:hover {
     font-size: 2em;
   }
 
-  .candidate-card {
-    padding: 1rem;
-  }
-
   .candidate-image {
     width: 150px;
     height: 150px;
@@ -356,5 +332,10 @@ a:hover {
 
   .nav-list {
     gap: 1rem;
+  }
+
+  .candidate-card {
+    margin: 0.5rem;
+    padding: 0.5rem;
   }
 }
