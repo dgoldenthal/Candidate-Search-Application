@@ -2,6 +2,8 @@
 
 A React TypeScript application for searching and managing potential candidates using the GitHub API. This application allows recruiters or hiring managers to search for GitHub users, view their profiles, and save potential candidates for future reference.
 
+Live Demo: [https://candidate-search-application-u219.onrender.com](https://candidate-search-application-u219.onrender.com)
+
 ## Features
 
 - Search GitHub users by username
@@ -60,12 +62,14 @@ npm run dev
 ## Usage
 
 ### Home Page (Search)
+
 - Enter a GitHub username in the search bar
 - View the user's profile information
 - Click "+" to save a candidate
 - Click "-" to skip to the next candidate
 
 ### Saved Candidates Page
+
 - View all saved candidates in a table format
 - Sort candidates by clicking column headers
 - Filter candidates using the search bar
@@ -94,9 +98,9 @@ The build artifacts will be stored in the `dist/` directory.
 
 ## Deployment
 
-This application can be deployed to various platforms. For Render deployment:
+The application is deployed on Render. For your own deployment:
 
 1. Connect your GitHub repository to Render
-2. Set the build command: `npm run build`
-3. Set the start command: `npm start`
-4. Add your GitHub token as an environment variable
+2. Set the build command: `npm install && npm run build`
+3. Set the start command: `npm run preview`
+4. Add your GitHub token as an environment variable `VITE_GITHUB_TOKEN`
