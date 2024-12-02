@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { searchGithub, searchGithubUser } from '../api/API';
+import { useState } from 'react';
+import { searchGithubUser } from '../api/API';
 import { Candidate } from '../interfaces/candidate.interface';
 
 const CandidateSearch = () => {
@@ -17,8 +17,8 @@ const CandidateSearch = () => {
     
     try {
       const userData = await searchGithubUser(searchQuery);
-      if (userData.login) {
-        setCurrentCandidate(userData);
+      if ('login' in userData) {
+        setCurrentCandidate(userData as Candidate);
       } else {
         setError('No user found with that username');
       }
@@ -39,11 +39,6 @@ const CandidateSearch = () => {
       setCurrentCandidate(null);
       setSearchQuery('');
     }
-  };
-
-  const handleReject = () => {
-    setCurrentCandidate(null);
-    setSearchQuery('');
   };
 
   return (
@@ -75,7 +70,8 @@ const CandidateSearch = () => {
             alt={`${currentCandidate.login}'s avatar`}
             className="candidate-image"
           />
-          <h2>{currentCandidate.login}({currentCandidate.login})</h2>
+          <h2>{currentCandidate.name || currentCandidate.login}</h2>
+          <p className="username">({currentCandidate.login})</p>
           <p>Location: {currentCandidate.location || 'Not specified'}</p>
           <p>Email: {currentCandidate.email || 'Not specified'}</p>
           <p>Company: {currentCandidate.company || 'Not specified'}</p>
@@ -89,7 +85,7 @@ const CandidateSearch = () => {
             View GitHub Profile
           </a>
           <div className="button-container">
-            <button onClick={handleReject} className="reject-button">−</button>
+            <button onClick={() => setCurrentCandidate(null)} className="reject-button">−</button>
             <button onClick={handleAccept} className="accept-button">+</button>
           </div>
         </div>

@@ -7,4 +7,5 @@ export interface Candidate {
   email: string | null;
   location: string | null;
   company: string | null;
+  bio: string | null;
 }
